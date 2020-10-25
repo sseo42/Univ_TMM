@@ -1,0 +1,31 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+length, red, green, blue = [], [], [], []
+
+with open('lin2012xyz10e_fine_7sf.csv', 'r') as f:
+    while True:
+        try:
+            l, x, y, z = map(float, f.readline().split(','))
+            t = np.array([[0.49, 0.31, 0.20], [0.17697, 0.81240, 0.01063], [0.00, 0.01, 0.99]])/0.17697
+            p,q = np.linalg.inv(t), np.array([x,y,z])
+            tmp = np.dot(p,q)
+            r,g,b = tmp[0], tmp[1], tmp[2]
+            print(tmp)
+            length.append(l/100)
+            red.append(r)
+            green.append(g)
+            blue.append(b)
+            judge = False
+        except ValueError:
+            break
+
+print(sum(red), sum(green), sum(blue))
+plt.plot(length, red, linestyle= '--', color= 'red', label= 'red')
+plt.plot(length, green, color= 'green', label= 'green')
+plt.plot(length, blue, color= 'blue', label= 'blue')
+
+plt.xlabel('wave_length')
+plt.ylabel('value')
+plt.legend(loc= 'best')
+plt.show()
